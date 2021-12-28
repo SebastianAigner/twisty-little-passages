@@ -1,65 +1,3 @@
-data class Grid(val rows: Int, val columns: Int) {
-    val grid: MutableList<MutableList<Cell>> = MutableList(rows) { row ->
-        MutableList(columns) { column ->
-            Cell(row, column)
-        }
-    }
-
-    init {
-        for(cell in cells()) {
-            val row = cell.row
-            val col = cell.column
-            cell.north = this[row - 1, col]
-            cell.south = this[row + 1, col]
-            cell.west = this[row, col - 1]
-            cell.east = this[row, col + 1]
-        }
-    }
-
-    operator fun get(row: Int, column: Int): Cell? {
-        return grid.getOrNull(row)?.getOrNull(column)
-    }
-
-    fun randomCell(): Cell {
-        return grid.random().random()
-    }
-
-    val size get() = rows * columns
-
-    fun rows() = sequence<MutableList<Cell>> {
-        for(row in grid) yield(row)
-    }
-
-    fun cells() = sequence<Cell> {
-        for(row in rows()) {
-            for(cell in row) {
-                yield(cell)
-            }
-        }
-    }
-
-    override fun toString(): String {
-        return buildString {
-            appendLine("+" + "———+".repeat(columns))
-            for(row in rows()) {
-                var top = "|"
-                var bottom = "+"
-                for(cell in row) {
-                    val body = "   "
-                    val eastBound = cell.east?.let { if(cell.linked(it)) " " else null } ?: "|"
-                    val southBound = cell.south?.let { if(cell.linked(it)) "   " else null } ?: "———"
-                    top += body + eastBound
-                    val corner = "+"
-                    bottom += southBound + corner
-                }
-                appendLine(top)
-                appendLine(bottom)
-            }
-        }
-    }
-
-}
-
 class Cell(
     val row: Int,
     val column: Int,
@@ -87,7 +25,8 @@ class Cell(
         return links.keys
     }
 
-    fun linked(other: Cell): Boolean {
+    fun linked(other: Cell?): Boolean {
+        if (other == null) return false
         return links.containsKey(other)
     }
 

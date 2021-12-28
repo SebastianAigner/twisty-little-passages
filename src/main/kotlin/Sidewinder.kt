@@ -1,3 +1,5 @@
+import java.io.File
+import javax.imageio.ImageIO
 import kotlin.random.Random
 
 class Sidewinder {
@@ -25,4 +27,5 @@ fun main() {
     val grid = Grid(4,4)
     Sidewinder().on(grid)
     println(grid)
+    ImageIO.write(grid.toImage(10), "png", File("foo.png"))
 }
