@@ -66,7 +66,11 @@ open class Grid(val rows: Int, val columns: Int) {
         return " "
     }
 
-    fun toImage(cellSize: Int): BufferedImage {
+    open fun backgroundColorFor(cell: Cell): Color? {
+        return null
+    }
+
+    fun toImage(cellSize: Int = 10): BufferedImage {
         val width = cellSize * columns
         val height = cellSize * rows
         val background = Color.WHITE
@@ -75,27 +79,37 @@ open class Grid(val rows: Int, val columns: Int) {
         val g2d = img.createGraphics()
         g2d.color = background
         g2d.fillRect(0, 0, img.width, img.height)
-        for (cell in cells()) {
-            val x1 = cell.column * cellSize
-            val y1 = cell.row * cellSize
-            val x2 = (cell.column + 1) * cellSize
-            val y2 = (cell.row + 1) * cellSize
-            g2d.color = wall
-            if (cell.north == null) {
-                g2d.drawLine(x1, y1, x2, y1)
-            }
-            if (cell.west == null) {
-                g2d.drawLine(x1, y1, x1, y2)
-            }
+        for (mode in listOf("Backgrounds", "Walls")) {
+            for (cell in cells()) {
+                val x1 = cell.column * cellSize
+                val y1 = cell.row * cellSize
+                val x2 = (cell.column + 1) * cellSize
+                val y2 = (cell.row + 1) * cellSize
+                if (mode == "Backgrounds") {
+                    backgroundColorFor(cell)?.let {
+                        g2d.color = it
+                        g2d.fillRect(x1, y1, x2, y2)
+                    }
+                } else {
+                    g2d.color = wall
+                    if (cell.north == null) {
+                        g2d.drawLine(x1, y1, x2, y1)
+                    }
+                    if (cell.west == null) {
+                        g2d.drawLine(x1, y1, x1, y2)
+                    }
 
-            if (!cell.linked(cell.east)) {
-                g2d.drawLine(x2, y1, x2, y2)
-            }
-            if (!cell.linked(cell.south)) {
-                g2d.drawLine(x1, y2, x2, y2)
-            }
+                    if (!cell.linked(cell.east)) {
+                        g2d.drawLine(x2, y1, x2, y2)
+                    }
+                    if (!cell.linked(cell.south)) {
+                        g2d.drawLine(x1, y2, x2, y2)
+                    }
+                }
 
+            }
         }
+
         return img
     }
 }

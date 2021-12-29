@@ -17,6 +17,11 @@ class Distances(val root: Cell) {
         return cells.keys
     }
 
+    fun max(): Pair<Cell, Int> {
+        val max = cells.maxByOrNull { it.value }!!
+        return max.toPair()
+    }
+
     fun pathTo(goal: Cell): Distances {
         var current = goal
         val breadcrumbs = Distances(root)
