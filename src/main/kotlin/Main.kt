@@ -34,6 +34,23 @@ class Cell(
         return listOfNotNull(north, south, east, west)
     }
 
+    fun distances(): Distances {
+        val distances = Distances(this)
+        var frontier = listOf(this)
+        while (frontier.isNotEmpty()) {
+            val newFrontier = mutableListOf<Cell>()
+            for (cell in frontier) {
+                for (linked in cell.links()) {
+                    if (distances[linked] != null) continue
+                    distances[linked] = distances[cell]!! + 1
+                    newFrontier += linked
+                }
+            }
+            frontier = newFrontier
+        }
+        return distances
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

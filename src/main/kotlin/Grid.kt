@@ -2,7 +2,7 @@ import java.awt.Color
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
 
-data class Grid(val rows: Int, val columns: Int) {
+open class Grid(val rows: Int, val columns: Int) {
     val grid: MutableList<MutableList<Cell>> = MutableList(rows) { row ->
         MutableList(columns) { column ->
             Cell(row, column)
@@ -49,7 +49,7 @@ data class Grid(val rows: Int, val columns: Int) {
                 var top = "|"
                 var bottom = "+"
                 for (cell in row) {
-                    val body = "   "
+                    val body = " ${contentsOf(cell)} "
                     val eastBound = cell.east?.let { if (cell.linked(it)) " " else null } ?: "|"
                     val southBound = cell.south?.let { if (cell.linked(it)) "   " else null } ?: "———"
                     top += body + eastBound
@@ -60,6 +60,10 @@ data class Grid(val rows: Int, val columns: Int) {
                 appendLine(bottom)
             }
         }
+    }
+
+    open fun contentsOf(cell: Cell): String {
+        return " "
     }
 
     fun toImage(cellSize: Int): BufferedImage {
