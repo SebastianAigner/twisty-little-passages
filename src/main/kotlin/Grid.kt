@@ -3,13 +3,14 @@ import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
 
 open class Grid(val rows: Int, val columns: Int) {
-    val grid: MutableList<MutableList<Cell>> = MutableList(rows) { row ->
-        MutableList(columns) { column ->
-            Cell(row, column)
-        }
-    }
+    var grid: MutableList<MutableList<Cell?>>
 
     init {
+        grid = prepareGrid()
+        configureCells()
+    }
+
+    fun configureCells() {
         for (cell in cells()) {
             val row = cell.row
             val col = cell.column
@@ -20,24 +21,33 @@ open class Grid(val rows: Int, val columns: Int) {
         }
     }
 
+    fun prepareGrid(): MutableList<MutableList<Cell?>> {
+        return MutableList(rows) { row ->
+            MutableList(columns) { column ->
+                Cell(row, column)
+            }
+        }
+    }
+
     operator fun get(row: Int, column: Int): Cell? {
         return grid.getOrNull(row)?.getOrNull(column)
     }
 
-    fun randomCell(): Cell {
-        return grid.random().random()
+    open fun randomCell(): Cell {
+        return grid.random().random()!!
     }
 
-    val size get() = rows * columns
+    open val size get() = rows * columns
 
-    fun rows() = sequence<MutableList<Cell>> {
+    fun rows() = sequence<MutableList<Cell?>> {
         for (row in grid) yield(row)
     }
 
     fun cells() = sequence<Cell> {
         for (row in rows()) {
             for (cell in row) {
-                yield(cell)
+                if (cell != null)
+                    yield(cell)
             }
         }
     }
@@ -53,9 +63,9 @@ open class Grid(val rows: Int, val columns: Int) {
                 var top = "|"
                 var bottom = "+"
                 for (cell in row) {
-                    val body = " ${contentsOf(cell)} "
-                    val eastBound = cell.east?.let { if (cell.linked(it)) " " else null } ?: "|"
-                    val southBound = cell.south?.let { if (cell.linked(it)) "   " else null } ?: "———"
+                    val body = " ${cell?.let { contentsOf(it) } ?: ' '} "
+                    val eastBound = cell?.east?.let { if (cell?.linked(it)) " " else null } ?: "|"
+                    val southBound = cell?.south?.let { if (cell?.linked(it)) "   " else null } ?: "———"
                     top += body + eastBound
                     val corner = "+"
                     bottom += southBound + corner

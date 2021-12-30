@@ -6,10 +6,10 @@ class Sidewinder : Algorithm {
     override fun on(grid: Grid) {
         for (row in grid.rows()) {
             val run = mutableListOf<Cell>()
-            for (cell in row) {
+            for (cell in row.filterNotNull()) {
                 run += cell
-                val atEasternBoundary = cell.east == null
-                val atNortherBoundary = cell.north == null
+                val atEasternBoundary = cell?.east == null
+                val atNortherBoundary = cell?.north == null
                 val shouldCloseOut = atEasternBoundary || (!atNortherBoundary && Random.nextBoolean())
                 if (shouldCloseOut) {
                     val member = run.random()
