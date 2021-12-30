@@ -42,6 +42,10 @@ open class Grid(val rows: Int, val columns: Int) {
         }
     }
 
+    fun deadEnds(): Sequence<Cell> {
+        return cells().filter { it.links().size == 1 }
+    }
+
     override fun toString(): String {
         return buildString {
             appendLine("+" + "———+".repeat(columns))

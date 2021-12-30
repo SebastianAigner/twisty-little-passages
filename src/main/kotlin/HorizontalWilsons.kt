@@ -1,8 +1,8 @@
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
-class HorizontalWilsons {
-    fun on(grid: Grid) {
+class HorizontalWilsons : Algorithm {
+    override fun on(grid: Grid) {
 
         val unvisited = grid.cells().toMutableList()
 

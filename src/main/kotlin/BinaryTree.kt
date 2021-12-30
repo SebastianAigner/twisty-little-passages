@@ -1,8 +1,8 @@
-class BinaryTree {
-    fun on(grid: Grid) {
-        for(cell in grid.cells()) {
+class BinaryTree : Algorithm {
+    override fun on(grid: Grid) {
+        for (cell in grid.cells()) {
             val neighbours = listOfNotNull(cell.north, cell.east)
-            if(neighbours.isNotEmpty()) {
+            if (neighbours.isNotEmpty()) {
                 cell.link(neighbours.random())
             }
         }

@@ -3,8 +3,8 @@ import javax.imageio.ImageIO
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
-class AldousBroder {
-    fun on(grid: Grid) {
+class AldousBroder : Algorithm {
+    override fun on(grid: Grid) {
         var cell = grid.randomCell()
         var unvisited = grid.size - 1
         while (unvisited > 0) {
