@@ -1,3 +1,6 @@
+import java.awt.image.BufferedImage
+
+
 class Mask(val rows: Int, val columns: Int) {
     companion object {
         fun fromText(lines: List<String>): Mask {
@@ -9,6 +12,26 @@ class Mask(val rows: Int, val columns: Int) {
                 }
             }
             return m
+        }
+
+        fun fromImage(img: BufferedImage): Mask {
+            val m = Mask(img.height, img.width)
+            for (row in 0 until img.height) {
+                for (column in 0 until img.width) {
+                    val (r, g, b) = img.getRGB(column, row).colorComponents
+                    println("$r $g $b")
+                    m[row, column] = (r + g + b) != 0
+                }
+            }
+            return m
+        }
+    }
+
+    fun invert() {
+        for ((rowIdx, row) in bits.withIndex()) {
+            for (colIdx in row.indices) {
+                this[rowIdx, colIdx] = !this[rowIdx, colIdx]
+            }
         }
     }
 
@@ -35,3 +58,13 @@ class Mask(val rows: Int, val columns: Int) {
 }
 
 data class Position(val row: Int, val column: Int)
+
+data class ColorComponents(val red: Int, val green: Int, val blue: Int)
+
+val Int.colorComponents: ColorComponents
+    get() {
+        val blue: Int = this and 0xff
+        val green: Int = this and 0xff00 shr 8
+        val red: Int = this and 0xff0000 shr 16
+        return ColorComponents(red, green, blue)
+    }
