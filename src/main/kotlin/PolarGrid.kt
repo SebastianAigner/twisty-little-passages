@@ -31,7 +31,6 @@ class PolarGrid(rows: Int, columns: Int) : Grid(rows, columns) {
             val dx = center + (outerRadius * cos(thetaCW)).toInt()
             val dy = center + (outerRadius * sin(thetaCW)).toInt()
             if (!cell.linked(cell.north)) {
-//                g2d.drawLine(ax, ay, cx, cy)
                 println("($ax|$ay) ($cx|$cy)")
                 println("$cx - ")
                 val startX = imgSize / 2 - innerRadius
