@@ -84,7 +84,7 @@ open class Grid(val rows: Int, val columns: Int) {
         return null
     }
 
-    fun toImage(cellSize: Int = 10): BufferedImage {
+    open fun toImage(cellSize: Int = 10): BufferedImage {
         val width = cellSize * columns
         val height = cellSize * rows
         val background = Color.WHITE
